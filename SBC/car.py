@@ -1,8 +1,8 @@
 import os
 import sys
 from time import sleep
-
-import RPI.GPIO as gpio
+from flask import Flask, render_template, Response
+import RPi.GPIO as gpio
 
 # class Car:
     
@@ -153,6 +153,52 @@ def Backward():
     pwmRightMotorC.ChangeDutyCycle(0)
     pwmFowardMotorP.ChangeDutyCycle(0)
     pwmBackwardMotorP.ChangeDutyCycle(50) #atrás
+
+def Stop():
+    pwmLeftMotorC.ChangeDutyCycle(0) 
+    pwmRightMotorC.ChangeDutyCycle(0)
+    pwmFowardMotorP.ChangeDutyCycle(0)
+    pwmBackwardMotorP.ChangeDutyCycle(0)
+
+app = Flask(__name__)
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/left/', methods=['POST'])
+def backwardMovement():
+    Left()
+    sleep(2)
+    Stop()
+    return render_template('index.html')
+
+@app.route('/right/', methods=['POST'])
+def backwardMovement():
+    Right()
+    sleep(2)
+    Stop()
+    return render_template('index.html')
+
+@app.route('/foward/', methods=['POST'])
+def fowardMovement():
+    Foward()
+    sleep(2)
+    Stop()
+    return render_template('index.html')
+
+@app.route('/backward/', methods=['POST'])
+def backwardMovement():
+    Backward()
+    sleep(2)
+    Stop()
+    return render_template('index.html')
+
+
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0', threaded=True)
+
+
 
 
 
